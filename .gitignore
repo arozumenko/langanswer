@@ -1,0 +1,7 @@
+chroma/
+data/
+venv/
+dev.env
+.promptLib/
+**/__pycache__/
+nltk_data/
