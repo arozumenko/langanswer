@@ -12,5 +12,5 @@ Experiment with langchain based embeddings
 
 
 ## Usage
-Run `streamlit run app.py` and open the link in your browser
+Run `streamlit run ui.py` and open the link in your browser
 Some depencencies might be missing, install them with `pip install <dependency>`
