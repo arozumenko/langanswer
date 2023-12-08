@@ -1,4 +1,16 @@
-import os
+# Copyright (c) 2023 Artem Rozumenko
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from langchain.chains import LLMChain 
 from llms.alita import AlitaLLM  # pylint: disable=E0401
@@ -9,8 +21,6 @@ from langchain.embeddings import __all__ as embeddings  # pylint: disable=E0401
 
 from langchain.vectorstores import __all__ as vectorstores  # pylint: disable=E0401
 from langchain.vectorstores import __getattr__ as get_vectorstore_cls  # pylint: disable=E0401
-
-from tools import log  # pylint: disable=E0401
 
 from langchain.prompts import PromptTemplate  # pylint: disable=E0401
 
@@ -53,11 +63,11 @@ def summarize(llmodel, document, summorization_prompt, metadata_key='document_su
         prompt=file_summary_prompt,
         verbose=True,
     )
-    log.info(f"Generating summary for: {document.metadata['source']}\n Content length: {content_length}")
+    print(f"Generating summary for: {document.metadata['source']}\n Content length: {content_length}")
     try:
         result = llm.predict(content=document.page_content)
     except:  # pylint: disable=W0702
-        log.exception("Failed to generate summary")
+        print("Failed to generate summary")
         raise
     document.metadata[metadata_key] = result
     return document
