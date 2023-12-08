@@ -15,7 +15,7 @@
 from os import environ
 from dotenv import load_dotenv
 
-load_dotenv('./dev.env')
+load_dotenv('./.env')
 
 embedding_model='AzureOpenAIEmbeddings'
 embedding_model_params={
