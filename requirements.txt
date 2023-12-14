@@ -23,6 +23,7 @@ tiktoken==0.5.2
 atlassian-python-api==3.41.4
 markdownify==0.11.6
 python-dotenv==1.0.0
+tiktoken==0.5.2
 # here we have dependencies for UI
 streamlit==1.29.0 
 streamlit-modal==0.1.0

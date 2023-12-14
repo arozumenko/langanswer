@@ -24,6 +24,11 @@ from langchain.vectorstores import __getattr__ as get_vectorstore_cls  # pylint:
 
 from langchain.prompts import PromptTemplate  # pylint: disable=E0401
 
+from config import (ai_model, ai_model_params, embedding_model, embedding_model_params, vectorstore, 
+                    vectorstore_params, weights,  guidance_message)
+
+from retrievers.AlitaRetriever import AlitaRetriever
+from langchain.schema import HumanMessage, SystemMessage
 
 def get_model(model_type: str, model_params: dict):
     """ Get LLM or ChatLLM """
@@ -94,3 +99,32 @@ def add_documents(vectorstore, documents):
         metadata.append(document.metadata)
     vectorstore.add_texts(texts, metadatas=metadata)
 
+
+
+def generateResponse(input, top_k=5):
+    embedding = get_embeddings(embedding_model, embedding_model_params)
+    vs = get_vectorstore(vectorstore, vectorstore_params, embedding_func=embedding)
+    ai = get_model(ai_model, ai_model_params)
+    retriever = AlitaRetriever(
+        vectorstore=vs,
+        doc_library='demothing',
+        top_k = top_k,
+        page_top_k=1,
+        weights=weights
+    )
+    docs = retriever.invoke(input)
+    
+    context = guidance_message
+    references = set()
+    messages = []
+    for doc in docs[:top_k]:
+        context += f'{doc.page_content}\n\n'
+        references.add(doc.metadata["source"])
+    messages.append(SystemMessage(content=context))
+    messages.append(HumanMessage(content=input))
+    response_text = ai(messages).content
+
+    return {
+        "response": response_text,
+        "references": references
+    }

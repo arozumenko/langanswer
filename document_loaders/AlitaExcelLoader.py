@@ -49,7 +49,7 @@ class AlitaExcelLoader(AlitaTableLoader):
 
 if __name__ == '__main__':
     loader = AlitaExcelLoader('/Users/arozumenko/Development/embeddins_next/data/Code Quality/NA Rate Card 2022 v1.1 (1).xlsx')
-    print(loader.load())
+    # print(loader.load())
     for _ in loader.lazy_load():
         print(_)
         print('------------------')
