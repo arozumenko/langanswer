@@ -45,11 +45,3 @@ class AlitaExcelLoader(AlitaTableLoader):
                 for record in loads(df[key].to_json(orient='records')):
                     yield record
         return
-
-
-if __name__ == '__main__':
-    loader = AlitaExcelLoader('/Users/arozumenko/Development/embeddins_next/data/Code Quality/NA Rate Card 2022 v1.1 (1).xlsx')
-    # print(loader.load())
-    for _ in loader.lazy_load():
-        print(_)
-        print('------------------')

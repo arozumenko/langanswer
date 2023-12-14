@@ -74,12 +74,10 @@ def main(dataset: str, library:str,
             print("Chunk: ", document.page_content)
             if chunk_processing_prompt:
                 document = summarize(llmodel, document, chunk_processing_prompt, metadata_key='chunk_summary')
-                if splitter_params.get('kw_for_chunks') and kw_extractor.extractor:
-                    document.metadata['keywords'] = list(set(document.metadata['keywords']).update( 
-                        kw_extractor.extract_keywords(
-                            document.metadata.get('chunk_summary', '') + '\n' + document.page_content
-                        )
-                    ))
+                if splitter_params.get('kw_for_chunks') and kw_extractor.extractor and document.metadata.get('chunk_summary'):
+                    chunk_keywords = kw_extractor.extract_keywords(document.metadata.get('chunk_summary', '') + '\n' + document.page_content)
+                    if chunk_keywords:
+                        document.metadata['keywords'] = list(set(document.metadata['keywords']).union(chunk_keywords))
             _documents = []
             if document.metadata.get('keywords'):
                 _documents.append(

@@ -25,7 +25,7 @@ from langchain.vectorstores import __getattr__ as get_vectorstore_cls  # pylint:
 from langchain.prompts import PromptTemplate  # pylint: disable=E0401
 
 from config import (ai_model, ai_model_params, embedding_model, embedding_model_params, vectorstore, 
-                    vectorstore_params, weights,  guidance_message)
+                    vectorstore_params, weights)
 
 from retrievers.AlitaRetriever import AlitaRetriever
 from langchain.schema import HumanMessage, SystemMessage
@@ -59,7 +59,7 @@ def summarize(llmodel, document, summorization_prompt, metadata_key='document_su
         return document
     content_length = len(document.page_content)
     # TODO: Magic number need to be removed
-    if content_length < 1000:
+    if content_length < 1000 and metadata_key == 'document_summary':
         return document
     file_summary = summorization_prompt
     file_summary_prompt = PromptTemplate.from_template(file_summary, template_format='jinja2')
@@ -101,7 +101,7 @@ def add_documents(vectorstore, documents):
 
 
 
-def generateResponse(input, collection, top_k=5):
+def generateResponse(input, guidance_message, context_message, collection, top_k=5):
     embedding = get_embeddings(embedding_model, embedding_model_params)
     vectorstore_params['collection_name'] = collection
     vs = get_vectorstore(vectorstore, vectorstore_params, embedding_func=embedding)
@@ -114,13 +114,14 @@ def generateResponse(input, collection, top_k=5):
         weights=weights
     )
     docs = retriever.invoke(input)
-    context = guidance_message
+    context = f'{guidance_message}\n\n'
     references = set()
     messages = []
     for doc in docs[:top_k]:
         context += f'{doc.page_content}\n\n'
         references.add(doc.metadata["source"])
-    messages.append(SystemMessage(content=context))
+    messages.append(SystemMessage(content=context_message))
+    messages.append(HumanMessage(content=context))
     messages.append(HumanMessage(content=input))
     response_text = ai(messages).content
 

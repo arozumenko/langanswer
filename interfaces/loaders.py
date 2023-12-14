@@ -17,12 +17,16 @@ from langchain.document_loaders import __all__ as loaders
 from document_loaders.AlitaCSVLoader import AlitaCSVLoader
 from document_loaders.AlitaExcelLoader import AlitaExcelLoader
 from document_loaders.AlitaDirectoryLoader import AlitaDirectoryLoader
+from document_loaders.AlitaGitRepoLoader import AlitaGitRepoLoader
+from document_loaders.AlitaConfluenceLoader import AlitaConfluenceLoader
 
 
 ex_classes = {
     'DirectoryLoader': AlitaDirectoryLoader,
     'CSVLoader': AlitaCSVLoader,
-    'ExcelLoader': AlitaExcelLoader
+    'ExcelLoader': AlitaExcelLoader,
+    'GitLoader': AlitaGitRepoLoader,
+    'ConfluenceLoader': AlitaConfluenceLoader
 }
 
 class LoaderInterface:

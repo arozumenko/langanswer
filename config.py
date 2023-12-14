@@ -15,14 +15,14 @@
 from os import environ
 from dotenv import load_dotenv
 
-load_dotenv('./.env')
+load_dotenv('./env')
 
 embedding_model='AzureOpenAIEmbeddings'
 embedding_model_params={
     "deployment": environ.get("EMBEDDINGS_DEPLOYMENT", ""),
     "model": environ.get("EMBEDDINGS_MODEL", ""),
     "openai_api_version": environ.get("OPENAI_API_VERSION", "2023-03-15-preview"),
-    "azure_endpoint": environ.get("AZURE_ENDPOINT", ""),
+    "azure_endpoint": environ.get("AZURE_EMBEDDINGS_ENDPOINT", ""),
     "openai_api_type": "azure",
     "openai_api_key": environ.get("OPENAI_API_KEY", ""),
 }
@@ -32,7 +32,7 @@ ai_model_params={
     "model_name": environ.get("MODEL_NAME", ""),
     "deployment_name": environ.get("DEPLOYMENT_NAME", ""),
     "openai_api_version": environ.get("OPENAI_API_VERSION", "2023-03-15-preview"),
-    "azure_endpoint": environ.get("AZURE_ENDPOINT", ""),
+    "azure_endpoint": environ.get("AZURE_LLM_ENDPOINT", ""),
     "openai_api_key": environ.get("OPENAI_API_KEY", ""),
     "max_tokens": int(environ.get("MAX_TOKEN", "512")), 
     "temperature": 0.8, 
@@ -62,11 +62,15 @@ splitter_params={
     'kw_for_chunks': True,
 }
 
+# You are a bot that tasked to document code. Provide 200 words summary of the code.
+# Code:
+# {{content}}
 document_processing_prompt = None
 chunk_processing_prompt = None
 
-guidance_message = """
-    Use following documents as a source for answering the question:
-"""
+guidance_message = """Text from documents for analysis follows:"""
 
-collections = ['test_collection']
+context_message = """You are bot that provide unswers based on data from the various document. 
+Your task is to provide accurate answer to the question."""
+
+collections = ['test_collection', 'code_collection']

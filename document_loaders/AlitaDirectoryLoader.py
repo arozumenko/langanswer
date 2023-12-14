@@ -35,23 +35,30 @@ class AlitaDirectoryLoader(DirectoryLoader):
     def __init__(self, **kwargs):
         self.raw_content = kwargs.get('table_raw_content', False)
         self.page_split = kwargs.get('docs_page_split', False)
-        del kwargs['table_raw_content']
-        del kwargs['docs_page_split']
-        super().__init__(**kwargs)
+        index_inclue_ext = kwargs.get('index_file_exts', '')
+        index_exclude_ext = kwargs.get('index_exclude_file_exts', '')
         #
         # Filter documents
         #
         self.index_file_exts = [
             ext.strip()
-            for ext in os.environ.get("INDEX_FILE_EXTS", "").split(",")
+            for ext in index_inclue_ext.split(",")
             if ext.strip()
         ]
         #
         self.index_exclude_file_exts = [
             ext.strip()
-            for ext in os.environ.get("INDEX_EXCLUDE_FILE_EXTS", "").split(",")
+            for ext in index_exclude_ext.split(",")
             if ext.strip()
         ]
+        for key in ['table_raw_content', 'docs_page_split', 'index_file_exts', 'index_exclude_file_exts']:
+            try:
+                del kwargs[key]
+            except:
+                pass
+
+        super().__init__(**kwargs)
+        
     
     def load_file(self, item: Path, path: Path, docs: List[Document], pbar: Optional[Any], retval: Optional[bool] = False):
         """Load a file.
@@ -65,7 +72,6 @@ class AlitaDirectoryLoader(DirectoryLoader):
         """
         _str_item = str(item)
         _, file_ext = os.path.splitext(_str_item)
-
         if item.is_file():
             if self.index_file_exts and file_ext not in self.index_file_exts:
                 return None
@@ -106,6 +112,7 @@ class AlitaDirectoryLoader(DirectoryLoader):
                     if pbar:
                         pbar.update(1)
                 if retval:
+                    print(_)
                     for _ in sub_docs:
                         yield _
     
