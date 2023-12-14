@@ -101,8 +101,9 @@ def add_documents(vectorstore, documents):
 
 
 
-def generateResponse(input, top_k=5):
+def generateResponse(input, collection, top_k=5):
     embedding = get_embeddings(embedding_model, embedding_model_params)
+    vectorstore_params['collection_name'] = collection
     vs = get_vectorstore(vectorstore, vectorstore_params, embedding_func=embedding)
     ai = get_model(ai_model, ai_model_params)
     retriever = AlitaRetriever(
@@ -113,7 +114,6 @@ def generateResponse(input, top_k=5):
         weights=weights
     )
     docs = retriever.invoke(input)
-    
     context = guidance_message
     references = set()
     messages = []

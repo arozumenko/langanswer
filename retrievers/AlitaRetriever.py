@@ -59,7 +59,8 @@ class AlitaRetriever(BaseRetriever):
                 break
         _docs = []
         for value in results.values():
-            pages = sorted(value['page_content'], key=lambda x: x["score"], reverse=True)
+            _chunks = sorted(value['page_content'], key=lambda x: x["score"], reverse=True)
+            pages = list(map(lambda x: x['content'], _chunks))
             _docs.append(Document(page_content = "\n\n".join(pages[:self.page_top_k]), metadata = value['metadata']))
         return _docs
     

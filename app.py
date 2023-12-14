@@ -70,7 +70,7 @@ def main(dataset: str, library:str,
             )
             print("Keywords: ", document.metadata['keywords'])
         splitter = Splitter(**splitter_params)
-        for document in splitter.split(document, splitter_name):
+        for index, document in enumerate(splitter.split(document, splitter_name)):
             print("Chunk: ", document.page_content)
             if chunk_processing_prompt:
                 document = summarize(llmodel, document, chunk_processing_prompt, metadata_key='chunk_summary')
@@ -98,7 +98,7 @@ def main(dataset: str, library:str,
                     )
                 _documents.append(
                     Document(page_content=dumps(document.metadata['og_data']), 
-                             metadata={'source': document.metadata['source'], 'type': 'data', 'library': library, 'source_type': loader_name, 'dataset': dataset})
+                             metadata={'source': document.metadata['source'], 'type': 'data', 'library': library, 'source_type': loader_name, 'chunk_index': index, 'dataset': dataset})
                     )
                 _documents.append(
                     Document(page_content=', '.join(document.metadata['columns']), 
@@ -107,12 +107,12 @@ def main(dataset: str, library:str,
             elif document.metadata.get('chunk_summary'):
                 _documents.append(
                     Document(page_content=document.metadata['chunk_summary'] + '\n\n' + document.page_content, 
-                             metadata={'source': document.metadata['source'], 'type': 'data', 'library': library, 'source_type': loader_name, 'dataset': dataset})
+                             metadata={'source': document.metadata['source'], 'type': 'data', 'library': library, 'source_type': loader_name, 'chunk_index': index, 'dataset': dataset})
                              )
             else:
                 _documents.append(
                     Document(page_content=document.page_content,
-                             metadata={'source': document.metadata['source'], 'type': 'data', 'library': library, 'source_type': loader_name, 'dataset': dataset})
+                             metadata={'source': document.metadata['source'], 'type': 'data', 'library': library, 'source_type': loader_name, 'chunk_index': index, 'dataset': dataset})
                 )
             print(_documents)
             add_documents(vectorstore=vectorstore, documents=_documents)

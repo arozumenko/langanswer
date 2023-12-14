@@ -34,7 +34,7 @@ ai_model_params={
     "openai_api_version": environ.get("OPENAI_API_VERSION", "2023-03-15-preview"),
     "azure_endpoint": environ.get("AZURE_ENDPOINT", ""),
     "openai_api_key": environ.get("OPENAI_API_KEY", ""),
-    "max_tokens": 512, 
+    "max_tokens": int(environ.get("MAX_TOKEN", "512")), 
     "temperature": 0.8, 
     "top_p": 0.4, 
     "max_retries": 2
@@ -42,7 +42,7 @@ ai_model_params={
 
 vectorstore='Chroma'
 vectorstore_params={
-    'collection_name': 'test',
+    'collection_name': 'test_collection',
     'persist_directory': './chroma'
 }
 
@@ -69,4 +69,4 @@ guidance_message = """
     Use following documents as a source for answering the question:
 """
 
-collections = ['test_collection', 'tcc_confluence']
+collections = ['test_collection']

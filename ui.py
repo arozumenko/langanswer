@@ -93,8 +93,7 @@ if prompt := st.chat_input("What is up?"):
     st.chat_message("user").markdown(prompt)
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-
-    response = generateResponse(prompt, top_k=10)
+    response = generateResponse(prompt, collection=st.session_state["collection"], top_k=10)
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
         message = response['response'] + '\n\n' + 'References: ' + '\n\n' 
