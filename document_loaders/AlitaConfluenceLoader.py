@@ -2,7 +2,7 @@ from langchain.document_loaders import ConfluenceLoader
 from langchain.document_loaders.confluence import ContentFormat
 
 class AlitaConfluenceLoader(ConfluenceLoader):
-    def load(**kwargs):
+    def load(self, **kwargs):
         content_formant = kwargs.get('content_format', 'view').lower()
         mapping = {
             'view': ContentFormat.VIEW,
