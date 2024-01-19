@@ -1,6 +1,5 @@
 langchain==0.0.343
 keybert==0.8.3
-flair==0.13.0
 charset_normalizer==3.3.2
 unstructured==0.11.2
 unstructured_pytesseract==0.3.12
@@ -30,5 +29,4 @@ urllib3==1.26.15
 requests==2.31.0
 certifi==2023.11.17
 # here we have dependencies for UI
-streamlit==1.29.0 
-streamlit-modal==0.1.0
+streamlit==1.2:9.0 

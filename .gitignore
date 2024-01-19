@@ -5,3 +5,4 @@ dev.env
 .promptLib/
 **/__pycache__/
 nltk_data/
+.DS_Store
