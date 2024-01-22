@@ -14,8 +14,9 @@
 
 import json
 import streamlit as st
-from interfaces.llm_processor import generateResponse
-from indexer import main
+
+from analysta_index.interfaces.llm_processor import generateResponse
+from analysta_index.indexer import main
 from config import (ai_model, ai_model_params, embedding_model, embedding_model_params, vectorstore, 
                     vectorstore_params, weights, kw_plan, kw_args, splitter_name, splitter_params, 
                     guidance_message, context_message, collections, 
@@ -90,7 +91,7 @@ with st.sidebar:
         if st.button("Load data"):
             with st.spinner('Wait for it...'):
                 vectorstore_params["collection_name"] = collectionName
-                main(dataset='data', library='demothing',
+                main(dataset='data', library=collectionName,
                     loader_name=dataLoader,
                     loader_params=json.loads(loaderParams),
                     load_params=json.loads(loadParams),

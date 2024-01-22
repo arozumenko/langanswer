@@ -15,7 +15,7 @@
 from os import environ
 from dotenv import load_dotenv
 
-load_dotenv('./env')
+load_dotenv('./dev.env')
 
 embedding_model='AzureOpenAIEmbeddings'
 embedding_model_params={
@@ -56,8 +56,8 @@ kw_plan='Bert'
 kw_args={'kw_strategy': 'max_sum'}
 splitter_name='chunks'  # sentences, paragraphs, lines, chunks
 splitter_params={
-    'chunk_size': 1000,
-    'chunk_overlap': 100,
+    'chunk_size': 2500,
+    'chunk_overlap': 200,
     'autodetect_language': True,
     'kw_for_chunks': True,
 }
