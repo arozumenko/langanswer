@@ -59,7 +59,7 @@ splitter_params={
     'chunk_size': 2500,
     'chunk_overlap': 200,
     'autodetect_language': True,
-    'kw_for_chunks': True,
+    'kw_for_chunks': False,
 }
 
 # You are a bot that tasked to document code. Provide 200 words summary of the code.
