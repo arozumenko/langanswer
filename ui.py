@@ -18,9 +18,9 @@ import streamlit_authenticator as stauth
 
 from analysta_index.interfaces.llm_processor import generateResponse
 from analysta_index.indexer import main
-from config import (ai_model, ai_model_params, embedding_model, embedding_model_params, vectorstore, 
-                    vectorstore_params, weights, kw_plan, kw_args, splitter_name, splitter_params, 
-                    guidance_message, context_message, collections, 
+from config import (ai_model, ai_model_params, embedding_model, embedding_model_params, vectorstore,
+                    vectorstore_params, weights, kw_plan, kw_args, splitter_name, splitter_params,
+                    guidance_message, context_message, collections,
                     document_processing_prompt, chunk_processing_prompt)
 from json import dumps
 
@@ -46,13 +46,13 @@ if "messages" not in st.session_state:
 # Initialize chat history
 if "collection" not in st.session_state:
     st.session_state["collection"] = ''
-    
+
 if 'data_loader_params' not in st.session_state:
     st.session_state['data_loader_params'] = dumps({
-        "path": "./data", 
-        "use_multithreading": False, 
-        "loader_cls": "TextLoader", 
-        "table_raw_content": True, 
+        "path": "./data",
+        "use_multithreading": False,
+        "loader_cls": "TextLoader",
+        "table_raw_content": True,
         "docs_page_split": True
         }, indent=2)
 
@@ -65,7 +65,7 @@ def change_default_values():
 authenticator.login()
 
 if st.session_state["authentication_status"]:
-    
+
     # Display chat messages from history on app rerun
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
@@ -98,7 +98,7 @@ if st.session_state["authentication_status"]:
                 index=None,
                 on_change=change_default_values
                 )
-            
+
             loaderParams = st.text_area("Loader params", value=st.session_state['data_loader_params'], height=300)
             loadParams = st.text_area("Load params", value=st.session_state['loader_params'])
             collectionName = st.selectbox(
@@ -137,17 +137,23 @@ if st.session_state["authentication_status"]:
             st.chat_message("user").markdown(prompt)
             # Add user message to chat history
             st.session_state.messages.append({"role": "user", "content": prompt})
-            response = generateResponse(prompt, guidance_message, context_message, collection=st.session_state["collection"], top_k=10)
+            response = generateResponse(
+                prompt, guidance_message, context_message, collection=st.session_state["collection"], top_k=10,
+                ai_model=ai_model, ai_model_params=ai_model_params,
+                embedding_model=embedding_model, embedding_model_params=embedding_model_params,
+                vectorstore=vectorstore, vectorstore_params=vectorstore_params,
+                weights=weights,
+            )
             # Display assistant response in chat message container
             with st.chat_message("assistant"):
-                message = response['response'] + '\n\n' + 'References: ' + '\n\n' 
-                
+                message = response['response'] + '\n\n' + 'References: ' + '\n\n'
+
                 for ref in response['references']:
                     message += f':gray[{ref}]\n\n'
                 st.markdown(message)
             # Add assistant response to chat history
             st.session_state.messages.append({"role": "assistant", "content": response})
-                
+
 elif st.session_state["authentication_status"] is False:
     st.error('Username/password is incorrect')
 elif st.session_state["authentication_status"] is None:
