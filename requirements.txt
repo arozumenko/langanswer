@@ -1,4 +1,4 @@
-analysta-index==0.1.0
+analysta-index==0.1.2
 streamlit==1.29.0
 streamlit_authenticator==0.3.1
 aidial-sdk==0.6.1
